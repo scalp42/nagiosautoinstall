@@ -90,7 +90,7 @@ installation() {
   # Compilation de NRPE
   cd ~/nagiosinstall
   echo "----------------------------------------------------"
-  echo "Compilation du plugin NRPE"
+  echo "Compilation du plugin NRPE et preconfigure xinetd"
   echo "----------------------------------------------------"
   tar zxvf nrpe-$nrpe_version.tar.gz
   cd nrpe-$nrpe_version
@@ -101,6 +101,7 @@ installation() {
 	fi
   make all
   make install-plugin && make install-daemon && make install-daemon-config && make install-xinetd
+  printf "nrpe\t\t5666/tcp\t\t\t#NRPE" >> /etc/services && /sbin/service xinetd restart ;
 
   # Installation des plugins additionnels
   plugins_list="check_ddos.pl check_memory check_url.pl"

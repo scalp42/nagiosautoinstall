@@ -29,6 +29,7 @@ installation() {
   $apt install fping libnet-snmp-perl libldap-dev libmysqlclient-dev libgnutls-dev libradiusclient-ng-dev
   $apt install libssl-dev openssl-blacklist openssl-blacklist-extra
   $apt install bsd-mailx mailutils postfix
+  $apt install postgresql-client-9.1
   ln -s /usr/bin/mail /bin/mail
 
   # Creation de l'utilisateur nagios et du groupe nagios
@@ -83,7 +84,7 @@ installation() {
   cd ~/nagiosinstall
   tar zxvf nagios-plugins-$nagios_plugins_version.tar.gz
   cd nagios-plugins-$nagios_plugins_version
-  ./configure --with-nagios-user=nagios --with-nagios-group=nagios
+  ./configure --with-nagios-user=nagios --with-nagios-group=nagios --enable-extra-opts
   make
   make install
 

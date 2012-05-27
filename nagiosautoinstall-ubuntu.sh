@@ -29,7 +29,7 @@ installation() {
   $apt install fping libnet-snmp-perl libldap-dev libmysqlclient-dev libgnutls-dev libradiusclient-ng-dev
   $apt install libssl-dev openssl-blacklist openssl-blacklist-extra
   $apt install bsd-mailx mailutils postfix
-  $apt install postgresql-client-9.1
+  $apt install postgresql-client-9.1 xinetd
   ln -s /usr/bin/mail /bin/mail
 
   # Creation de l'utilisateur nagios et du groupe nagios

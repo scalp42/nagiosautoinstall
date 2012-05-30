@@ -15,7 +15,7 @@ nrpe_version="2.13"
 
 apt="apt-get -q -y --force-yes"
 wget="wget --no-check-certificate"
-check_x64=`uname -a | grep -e "_64"`
+check_x64=`uname -a | grep -e "_64" | wc -l`
 
 # Fonction: installation
 installation() {

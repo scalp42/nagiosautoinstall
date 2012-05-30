@@ -16,6 +16,9 @@ nrpe_version="2.13"
 apt="apt-get -q -y --force-yes"
 wget="wget --no-check-certificate"
 
+check_x64=`uname -a | grep -e "_64" | wc -l`
+check_nrpe=`cat /etc/services | grep -i "nrpe" | wc -l`
+
 # Fonction: installation
 update() {
 
@@ -27,7 +30,7 @@ update() {
   echo "# sudo tar zxvf ./nagios-backup.tgz"
   echo "----------------------------------------------------"
   cd /tmp
-  tar zcvfh ./nagios-backup.tgz /usr/local/nagios --exclude var/archives
+  tar pzcvfh ./nagios-backup.tgz /usr/local/nagios --exclude var/archives
 
   # Pre-requis
   echo "----------------------------------------------------"
@@ -35,6 +38,7 @@ update() {
   echo "----------------------------------------------------"
   $apt install libperl-dev
   $apt install libssl-dev
+  $apt install bsd-mailx mailutils postfix xinetd
 
   # Recuperation des sources
   cd /tmp
@@ -73,7 +77,7 @@ update() {
   cd /tmp/src
   tar zxvf nagios-plugins-$nagios_plugins_version.tar.gz
   cd nagios-plugins-$nagios_plugins_version
-  ./configure --with-nagios-user=nagios --with-nagios-group=nagios
+  ./configure --with-nagios-user=nagios --with-nagios-group=nagios --enable-extra-opts
   make
   make install
   make install-root
@@ -85,9 +89,17 @@ update() {
   cd /tmp/src
   tar zxvf nrpe-$nrpe_version.tar.gz
   cd nrpe-$nrpe_version
-  ./configure
+	if [[ $check_x64 -ne 0 ]]; then
+		./configure --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu --enable-command-args --enable-ssl
+	else
+		./configure --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib --enable-command-args --enable-ssl
   make all
-  make install-plugin
+  make install-plugin && make install-daemon && make install-daemon-config && make install-xinetd
+  if [[ $check_nrpe == 0 ]]; then
+	printf "nrpe\t\t5666/tcp\t\t\t#NRPE" >> /etc/services && /sbin/service xinetd restart ;
+  else
+	/sbin/service xinetd restart
+  fi
 
   # On fixe les droits
   chown -R nagios:nagios /usr/local/nagios

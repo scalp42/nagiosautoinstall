@@ -10,7 +10,7 @@ version="0.93"
 
 nagios_core_version="3"
 nagios_core_subversion="3.4.1"
-nagios_plugins_version="1.4.15"
+nagios_plugins_version="1.4.16"
 nrpe_version="2.13"
 
 apt="apt-get -q -y --force-yes"
@@ -102,7 +102,7 @@ installation() {
 	fi
   make all
   make install-plugin && make install-daemon && make install-daemon-config && make install-xinetd
-  printf "nrpe\t\t5666/tcp\t\t\t#NRPE" >> /etc/services && /sbin/service xinetd restart ;
+  printf "nrpe\t\t5666/tcp\t\t\t#NRPE" >> /etc/services && /usr/sbin/service xinetd restart ;
 
   # Installation des plugins additionnels
   plugins_list="check_ddos.pl check_memory check_url.pl"

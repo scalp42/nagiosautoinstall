@@ -8,7 +8,7 @@
 #
 version="0.6"
 
-nagios_plugins_version="1.4.15"
+nagios_plugins_version="1.4.16"
 
 # Fonction: installation
 update() {
